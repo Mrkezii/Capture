@@ -1,6 +1,11 @@
 package com.example.davidkezi.capture;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.gesture.GestureLibraries;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +17,8 @@ import java.io.File;
 public class MainActivity extends Activity {
     Button btn;
     ImageView imageview;
+    static final int  CAM_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +28,10 @@ public class MainActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+            Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File file = getFile();
+                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                startActivityForResult(camera_intent, CAM_REQUEST);
             }
         });
 
@@ -37,5 +47,12 @@ public class MainActivity extends Activity {
         File image_file = new File(folder, "camera_image.jpg");
         return image_file;
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    String path = "sdcard/camera_app/camera_image.jpg";
+        imageview.setImageDrawable(Drawable.createFromPath(path));
     }
 }
